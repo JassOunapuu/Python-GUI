@@ -9,7 +9,6 @@ from tkinter import *
 aken = Tk()
 aken.title('Tkinter Ülesanne 03')
 aken.configure(background='black')
-aken.iconbitmap('favicon.ico')
 aken. geometry("") 
 aken.resizable(0, 0)
 
@@ -20,9 +19,3 @@ Label(aken, text="2016", foreground="red", background="black", pady=10, padx=30,
 
 
 aken.mainloop()
-
-
-
-
-
-
