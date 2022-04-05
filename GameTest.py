@@ -5,6 +5,8 @@ hp = 0
 coins = 0
 damage = 0
 
+# Parameetrite näitamine
+
 def printParameters():
     print("")
     print("Sul on {0} elu, {1} luumurd(u) ja {2} money.".format(hp, damage, coins))
@@ -20,6 +22,9 @@ def printCoins():
 def printDamage():
     print("")
     print("Sul on", damage, "luumurd(u).")
+
+
+# Kaupmehega kohtumine
 
 def meetShop():
     global hp
@@ -46,32 +51,47 @@ def meetShop():
 
     oneHpCost = 5
     threeHpCost = 12
+    
     print("")
     print("Teel kohtasite kaupmeest!")
     printParameters()
-    
-    while input("Kas tahad midagi osta või lahkuda? (O/L): ").upper() == "O":
+
+    if input("Kas tahad midagi osta või lahkuda? (O/L): ").upper() == "O":
         print("")
         print("1) Üks HP -", oneHpCost, "money;")
         print("2) Kolm HP -", threeHpCost, "money;")
         print("3) {0} {1} - {2} money".format(weaponRarity, weapon, weaponCost))
+        global lopop
+        global loop
+        global lop
 
         choice = input("Mida tahad osta: ")
         if choice == "1":
             if buy(oneHpCost):
                 hp += 1
                 printHp()
+                salvestamine()
         elif choice == "2":
             if buy(threeHpCost):
                 hp += 3
                 printHp()
+                salvestamine()
         elif choice == "3":
             if buy(weaponCost):
                 damage = weaponDmg
                 printDamage()
+                salvestamine()
         else:
             print("")
-            print("Ma ei müü seda.")
+            print("Ma ei müü seda.")     
+    elif input("Kas tahad mängust lahkuda? (jah/ei)").lower() == "jah":
+        print("Tsau")
+        salvestamine()
+        loop = 0
+        lop = 0
+        
+    
+# Vastased/koletised, nende atribuudid ja nendega kohtumine
 
 def meetMonster():
     global hp
@@ -121,7 +141,10 @@ def meetMonster():
         print("")
         print("Teil õnnestus Vastane võita, mille eest saite", loot, "money.")
         printCoins()
-    
+
+
+# Mängu alustamine ja loopimine
+
 def initGame(initHp, initCoins, initDamage):
     global hp
     global coins
@@ -144,61 +167,77 @@ def gameLoop():
     else:
         input("Kõnnid mööda tänavat...")
 
-def print_menuu():    
-    print (30 * "-" , "MENÜÜ" , 30 * "-")
-    print ("[1] Uus mäng")
-    print ("[2] Salvesta mäng")
-    print ("[3] Lae mäng")
-    print ("[4] Credits")
-    print ("[5] Välju mängust")
-    print (67 * "-")
-    global valik
-    valik = int(input("Valik [1-5]: "))
 
-loop=True      
-  
+
+
+
+# Mängu salvestamine ja laadimine  
 
 def salvestamine():
-    nimi = input("Sisestage oma nimi: ")
+    print("Mäng salvestati")
+    with open('save.txt', 'w') as f:
+         f.write(f"{hp} ")
+         f.write(f"{coins} ")
+         f.write(f"{damage} ")
 
-    with open('readme.txt', 'w') as f:
-        f.write('readme')
+def laadimine():
+    with open(f"save.txt", "r")as f:
+         for rida in f:
+            a = rida.split(" ")
+            hp = a[0]
+            coins = a[1]
+            damage = a[2]
+            initGame(hp, coins, damage)
 
 
 
 
+# Menüü printimine ja valikute tegemine
 
-        
-while loop:   
-    print_menuu()   
-
+lopop = 1
+loop = 1
+while loop == 1:
+    while lopop == 1:
+        if int(coins) >= 100:
+            print("tubli! sa võitsid!")
+        print (30 * "-" , "MENÜÜ" , 30 * "-")
+        print ("[1] Uus mäng")
+        print ("[2] Lae mäng")
+        print ("[3] Credits")
+        print ("[4] Välju mängust")
+        print (67 * "-")
+        valik = int(input("valik [1-5]: "))
+        lopop = 0
     if valik==1:
         print ("Tere tulemast uude mängu!")
-        loop = False
-        initGame(randint(1, 1),randint(4, 8),randint(1, 1))
+        loop = 0
+        initGame(randint(3, 6),randint(4, 8),randint(1, 3))
+        lopop = 0
+        lop = 1
+        while lop == 1:
+            gameLoop()
+
+            if hp <= 0:
+                if input("Kas tahad menüüsse tagasi minna? (jah/ei): ").lower() == "jah":
+                    lopop = 1
+                    loop = 1
+                    lop = 0
+                else:
+                    lop = 0
+
+
     elif valik==2:
-        print ("Salvestasid mängu")
-        
-    elif valik==3:
         print ("Laadisid mängu")
-        
-    elif valik==4:
+        laadimine()
+        lopop = 0
+        loop = 1
+        lop = 1
+    elif valik==3:
         print("")
         print ("Martin Pettai, Jass Õunapuu, Artjom Vinogradov")
         print("")
-    elif valik==5:
-        loop = False
+    elif valik==4:
+        loop = 0
         exit()
     else:
         print("Vale valik, oled kindel, et vajutasid õiget klahvi?")
-
-
-
-while True:
-    gameLoop()
-
-    if hp <= 0:
-        if input("Kas tahad menüüsse tagasi minna? (jah/ei): ").lower() == "jah":
-            print_menuu()
-        else:
-            break
