@@ -12,7 +12,7 @@ damage = 0
 
 def printParameters():
     print("")
-    print("Sul on {0} elu, {1} luumurd(u) ja {2} money.".format(hp, damage, coins))
+    print("Sul on {0} elu, {1} luumurd(u) ja {2} raha.".format(hp, damage, coins))
 
 def printHp():
     print("")
@@ -20,7 +20,7 @@ def printHp():
 
 def printCoins():
     print("")
-    print("Sul on", coins, "money.")
+    print("Sul on", coins, "raha.")
 
 def printDamage():
     print("")
@@ -61,9 +61,9 @@ def meetShop():
 
     if input("Kas tahad midagi osta või lahkuda? (O/L): ").upper() == "O":
         print("")
-        print("1) Üks HP -", oneHpCost, "money;")
-        print("2) Kolm HP -", threeHpCost, "money;")
-        print("3) {0} {1} - {2} money".format(weaponRarity, weapon, weaponCost))
+        print("1) Üks HP -", oneHpCost, "raha;")
+        print("2) Kolm HP -", threeHpCost, "raha;")
+        print("3) {0} {1} - {2} raha".format(weaponRarity, weapon, weaponCost))
         global lopop
         global loop
         global lop
@@ -144,7 +144,7 @@ def meetMonster():
         loot = r.randint(0, 2) + monsterLvl*2
         coins += int(loot)
         print("")
-        print("Teil õnnestus Vastane võita, mille eest saite", loot, "money.")
+        print("Teil õnnestus Vastane võita, mille eest saite", loot, "raha.")
         printCoins()
 
 
@@ -190,7 +190,12 @@ def laadimine():
             hp = int(a[0])
             coins = int(a[1])
             damage = int(a[2])
-            initGame(hp, coins, damage)
+            if hp <= 0:
+                print("Pead uut mängu alustama!")
+            else:
+                initGame(hp, coins, damage)
+                print ("Laadisid mängu")
+    
 
 
 
@@ -208,10 +213,12 @@ while loop == 1:
         print ("[3] Credits")
         print ("[4] Välju mängust")
         print (67 * "-")
-        valik = int(input("valik [1-5]: "))
+        valik = int(input("valik [1-4]: "))
         lopop = 0
     if valik==1:
         print ("Tere tulemast uude mängu!")
+        print("Oled inimene kalevipoja aegses eestis ja üritad koguda piisavalt raha uue maja jaoks (100 raha) \nJalutad mööda tänavaid, et leida vastaseid, kellega võidelda.")
+        print("(Mäng salvestub, kui jõuad kaupmehe juurde)")
         loop = 0
         initGame(randint(3, 6),randint(4, 8),randint(1, 3))
         lopop = 0
@@ -246,7 +253,7 @@ while loop == 1:
 
 
     elif valik==2:
-        print ("Laadisid mängu")
+        
         laadimine()
         lopop = 0
         loop = 1
@@ -254,7 +261,7 @@ while loop == 1:
         while lop == 1:
             gameLoop()
             if coins >= 100:
-                print("tubli! sa võitsid!")
+                print("Oled teeninud 100 raha, saad endale lõpuks maja osta.")
                 loop = 0
                 valik = 4
                 lop = 0
@@ -285,6 +292,7 @@ while loop == 1:
         print("")
         print ("Martin Pettai, Jass Õunapuu, Artjom Vinogradov")
         print("")
+        loop = 0
     elif valik==4:
         loop = 0
         exit()
